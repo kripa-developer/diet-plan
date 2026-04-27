@@ -75,4 +75,4 @@ diet-plan/
 - `POST /api/diet-plans` - Create a Diet Plan
 - `POST /api/diet-plans/{id}/meals` - Add Meal to Plan
 ---
-Built with ❤️ by NutriPlan Team.
+Built with ❤️ by Kripa Krishnan.
