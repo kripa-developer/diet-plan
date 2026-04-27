@@ -1,0 +1,72 @@
+<div class="page fade-in">
+  <div class="page-title">👤 My Profile</div>
+  <div class="page-sub">Update your stats to get accurate calorie and BMI calculations.</div>
+
+  <div class="spinner-wrap" *ngIf="loading"><div class="spinner"></div></div>
+
+  <div class="profile-layout" *ngIf="!loading">
+    <div class="profile-stats">
+      <div class="stat-card" *ngIf="user?.bmi">
+        <div class="stat-icon">⚖️</div>
+        <div class="stat-value">{{ user!.bmi }}</div>
+        <div class="stat-label">BMI — {{ bmiStatus }}</div>
+      </div>
+      <div class="stat-card" *ngIf="user?.dailyCalorieTarget">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-value">{{ user!.dailyCalorieTarget }}</div>
+        <div class="stat-label">Daily Calorie Target</div>
+      </div>
+      <div class="stat-card" *ngIf="user?.weightKg">
+        <div class="stat-icon">📏</div>
+        <div class="stat-value">{{ user!.weightKg }} kg</div>
+        <div class="stat-label">Weight</div>
+      </div>
+      <div class="alert alert-info" *ngIf="!user?.bmi">
+        Fill in age, weight and height to calculate your BMI and calorie target.
+      </div>
+    </div>
+
+    <div class="card profile-form">
+      <h3>Edit Profile</h3>
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input class="form-input" formControlName="name" placeholder="Your name" />
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Age</label>
+            <input type="number" class="form-input" formControlName="age" placeholder="Years" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <select class="form-input form-select" formControlName="gender">
+              <option value="">Select…</option>
+              <option *ngFor="let g of genders" [value]="g">{{ g }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Weight (kg)</label>
+            <input type="number" class="form-input" formControlName="weightKg" placeholder="e.g. 70" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Height (cm)</label>
+            <input type="number" class="form-input" formControlName="heightCm" placeholder="e.g. 170" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Activity Level</label>
+          <select class="form-input form-select" formControlName="activityLevel">
+            <option value="">Select…</option>
+            <option *ngFor="let a of activityLevels" [value]="a.value">{{ a.label }}</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid || saving">
+          {{ saving ? 'Saving…' : 'Save Profile' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

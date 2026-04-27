@@ -1,0 +1,55 @@
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="container hero-content fade-in-up">
+    <div class="hero-badge">🌱 Your Personal Nutrition Assistant</div>
+    <h1 class="hero-title">Eat Smart.<br>Live <span class="gradient-text">Healthier.</span></h1>
+    <p class="hero-sub">Build personalised weekly meal plans, track macros effortlessly, and hit your health goals — all in one beautiful app.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary btn-lg" (click)="goRegister()">Get Started — It's Free</button>
+      <a routerLink="/login" class="btn btn-secondary btn-lg">Sign In</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><span class="hstat-n">21+</span><span class="hstat-l">Curated Meals</span></div>
+      <div class="hstat"><span class="hstat-n">7</span><span class="hstat-l">Day Planner</span></div>
+      <div class="hstat"><span class="hstat-n">100%</span><span class="hstat-l">Macro Tracking</span></div>
+    </div>
+  </div>
+  <div class="hero-illustration">🥦🥑🍗🥗🍎</div>
+</section>
+
+<!-- FEATURES -->
+<section class="section features-section">
+  <div class="container">
+    <div class="section-header fade-in-up">
+      <h2>Everything you need to eat well</h2>
+      <p>Science-backed tools wrapped in a gorgeous, easy-to-use interface.</p>
+    </div>
+    <div class="grid-3 features-grid">
+      <div class="feature-card card fade-in-up" *ngFor="let f of features">
+        <span class="feature-icon">{{ f.icon }}</span>
+        <h3>{{ f.title }}</h3>
+        <p>{{ f.desc }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-card fade-in-up">
+      <h2>Ready to transform your diet?</h2>
+      <p>Join thousands of users planning smarter meals every week.</p>
+      <button class="btn btn-primary btn-lg" (click)="goRegister()">Start Your Free Plan →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <span class="logo-text">🥗 NutriPlan</span>
+    <p>© 2024 NutriPlan. Built with ❤️ and Spring Boot + Angular.</p>
+  </div>
+</footer>

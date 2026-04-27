@@ -1,0 +1,73 @@
+<div class="page fade-in">
+  <div class="page-title">🥗 Meal Library</div>
+  <div class="page-sub">Browse and add meals to your diet plan.</div>
+
+  <!-- Search & filter bar -->
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="form-input search-input" [(ngModel)]="searchQuery"
+             placeholder="Search meals…" (input)="onSearch()" />
+    </div>
+    <div class="cat-chips">
+      <button *ngFor="let c of categories"
+              class="chip cat-chip"
+              [class.active]="selectedCategory === c"
+              (click)="onCategory(c)">
+        {{ c || 'All' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="spinner-wrap" *ngIf="loading"><div class="spinner"></div></div>
+
+  <div class="grid-auto fade-in" *ngIf="!loading">
+    <app-meal-card *ngFor="let m of meals" [meal]="m"
+                   actionLabel="Add to Plan"
+                   (actionClicked)="openAddDialog($event)">
+    </app-meal-card>
+    <div class="empty-state" *ngIf="meals.length === 0" style="grid-column:1/-1">
+      <div class="icon">🔍</div>
+      <h3>No meals found</h3>
+      <p>Try a different search or category.</p>
+    </div>
+  </div>
+
+  <!-- Add-to-plan dialog overlay -->
+  <div class="overlay" *ngIf="showDialog" (click)="closeDialog()">
+    <div class="dialog card" (click)="$event.stopPropagation()">
+      <h3>Add <em>{{ selectedMeal?.name }}</em> to Plan</h3>
+      <div class="form-group">
+        <label class="form-label">Plan</label>
+        <select class="form-input form-select" [(ngModel)]="selectedPlanId">
+          <option *ngFor="let p of plans" [value]="p.id">{{ p.name }}</option>
+        </select>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Day</label>
+          <select class="form-input form-select" [(ngModel)]="selectedDay">
+            <option *ngFor="let d of days" [value]="d">{{ d }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Meal Time</label>
+          <select class="form-input form-select" [(ngModel)]="selectedTime">
+            <option *ngFor="let t of times" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Servings</label>
+        <input type="number" class="form-input" [(ngModel)]="servings" min="1" max="5" />
+      </div>
+      <div *ngIf="plans.length === 0" class="alert alert-info">
+        You don't have any plans yet. <a routerLink="/plans" (click)="closeDialog()">Create one first.</a>
+      </div>
+      <div class="dialog-actions">
+        <button class="btn btn-secondary" (click)="closeDialog()">Cancel</button>
+        <button class="btn btn-primary" (click)="addToPlan()" [disabled]="!selectedPlanId">Add Meal</button>
+      </div>
+    </div>
+  </div>
+</div>

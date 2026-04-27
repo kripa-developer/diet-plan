@@ -1,0 +1,78 @@
+<nav class="navbar" [class.scrolled]="scrolled">
+  <div class="nav-container">
+    <!-- Logo -->
+    <a routerLink="/" class="logo" (click)="closeMenu()">
+      <span class="logo-icon">🥗</span>
+      <span class="logo-text">NutriPlan</span>
+    </a>
+
+    <!-- Desktop links -->
+    <ul class="nav-links" *ngIf="isLoggedIn">
+      <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+      <li><a routerLink="/meals"     routerLinkActive="active">Meal Library</a></li>
+      <li><a routerLink="/plans"     routerLinkActive="active">My Plans</a></li>
+      <li *ngIf="isAdmin"><a routerLink="/admin/meals" routerLinkActive="active" class="admin-link">⚙ Admin</a></li>
+    </ul>
+    <ul class="nav-links" *ngIf="!isLoggedIn">
+      <li><a routerLink="/login">Login</a></li>
+      <li><a routerLink="/register" class="btn btn-primary btn-sm">Get Started</a></li>
+    </ul>
+
+    <!-- Premium Theme Switcher -->
+    <div class="theme-area">
+      <button mat-icon-button [matMenuTriggerFor]="themeMenu" class="theme-btn" matTooltip="Choose Theme">
+        <mat-icon [style.color]="'var(--primary)'">{{ currentThemeIcon }}</mat-icon>
+      </button>
+      <mat-menu #themeMenu="matMenu" class="premium-menu">
+        <button mat-menu-item *ngFor="let t of themes" (click)="changeTheme(t.value)" class="menu-item">
+          <mat-icon [style.color]="t.color">{{ t.icon }}</mat-icon>
+          <span>{{ t.name }}</span>
+          <mat-icon *ngIf="themeService.getTheme() === t.value" class="check-icon">check</mat-icon>
+        </button>
+      </mat-menu>
+    </div>
+
+    <!-- User menu (logged in) -->
+    <div class="user-area" *ngIf="isLoggedIn">
+      <a routerLink="/profile" class="avatar-btn" matTooltip="Profile">
+        <span class="avatar">{{ userName.charAt(0).toUpperCase() }}</span>
+      </a>
+      <button class="btn btn-secondary btn-sm" (click)="logout()">Logout</button>
+    </div>
+
+    <!-- Hamburger -->
+    <button class="hamburger" (click)="toggleMenu()" aria-label="menu">
+      <span [class.open]="menuOpen"></span>
+    </button>
+  </div>
+
+  <!-- Mobile dropdown -->
+  <div class="mobile-menu" [class.open]="menuOpen">
+    <div class="mobile-themes">
+      <span class="label">Switch Theme</span>
+      <div class="theme-grid">
+        <button *ngFor="let t of themes" 
+                class="mobile-theme-btn" 
+                [class.active]="themeService.getTheme() === t.value"
+                (click)="changeTheme(t.value)">
+          <mat-icon [style.color]="t.color">{{ t.icon }}</mat-icon>
+          <span>{{ t.name }}</span>
+        </button>
+      </div>
+    </div>
+    <hr class="nav-divider">
+    <ng-container *ngIf="isLoggedIn">
+      <a routerLink="/dashboard" (click)="closeMenu()">Dashboard</a>
+      <a routerLink="/meals"     (click)="closeMenu()">Meal Library</a>
+      <a routerLink="/plans"     (click)="closeMenu()">My Plans</a>
+      <a routerLink="/profile"   (click)="closeMenu()">Profile</a>
+      <a routerLink="/admin/meals" *ngIf="isAdmin" (click)="closeMenu()">⚙ Admin</a>
+      <button class="btn btn-secondary" (click)="logout()">Logout</button>
+    </ng-container>
+    <ng-container *ngIf="!isLoggedIn">
+      <a routerLink="/login"    (click)="closeMenu()">Login</a>
+      <a routerLink="/register" (click)="closeMenu()">Register</a>
+    </ng-container>
+  </div>
+</nav>
+<div class="nav-spacer"></div>

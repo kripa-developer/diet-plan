@@ -1,0 +1,33 @@
+<div class="meal-card card fade-in-up">
+  <div class="meal-img-wrap">
+    <img [src]="meal.imageUrl || fallbackImage" [alt]="meal.name"
+         (error)="$any($event.target).src = fallbackImage" class="meal-img" />
+    <span [class]="chipClass">{{ meal.category }}</span>
+  </div>
+  <div class="meal-body">
+    <h3 class="meal-name">{{ meal.name }}</h3>
+    <p class="meal-desc" *ngIf="meal.description">{{ meal.description }}</p>
+    <div class="macro-grid">
+      <div class="macro-item">
+        <span class="macro-num">{{ meal.calories }}</span>
+        <span class="macro-lbl">kcal</span>
+      </div>
+      <div class="macro-item">
+        <span class="macro-num">{{ meal.proteinG ?? '—' }}</span>
+        <span class="macro-lbl">Protein g</span>
+      </div>
+      <div class="macro-item">
+        <span class="macro-num">{{ meal.carbsG ?? '—' }}</span>
+        <span class="macro-lbl">Carbs g</span>
+      </div>
+      <div class="macro-item">
+        <span class="macro-num">{{ meal.fatG ?? '—' }}</span>
+        <span class="macro-lbl">Fat g</span>
+      </div>
+    </div>
+    <button *ngIf="showAction" class="btn btn-primary btn-sm action-btn"
+            (click)="actionClicked.emit(meal)">
+      {{ actionLabel }}
+    </button>
+  </div>
+</div>

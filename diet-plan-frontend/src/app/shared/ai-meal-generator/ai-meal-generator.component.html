@@ -1,0 +1,47 @@
+<div class="ai-container">
+  <div class="ai-header">
+    <div class="magic-icon">✨</div>
+    <h2>AI Meal Generator</h2>
+    <p>Get a personalized meal suggestion based on your goals.</p>
+  </div>
+
+  <div class="ai-input-wrap" *ngIf="!suggestion">
+    <div class="form-group">
+      <label class="form-label">Tell the AI what you're craving (optional)</label>
+      <input type="text" class="form-input" [(ngModel)]="prompt" 
+             placeholder="e.g. something light, high protein, vegetarian..." (keyup.enter)="generate()" />
+    </div>
+    <button class="btn btn-primary magic-btn" [disabled]="loading" (click)="generate()">
+      <span *ngIf="!loading">✨ Generate Suggestion</span>
+      <span *ngIf="loading">🔍 AI is thinking...</span>
+    </button>
+  </div>
+
+  <div class="ai-loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Analyzing your profile and health goals...</p>
+  </div>
+
+  <div class="ai-result fade-in-up" *ngIf="suggestion && !loading">
+    <div class="result-card card">
+      <div class="category-badge chip">{{ suggestion.category }}</div>
+      <h3>{{ suggestion.mealName }}</h3>
+      <p class="desc">{{ suggestion.description }}</p>
+      
+      <div class="macro-row">
+        <div class="macro-pill">🔥 {{ suggestion.calories }} kcal</div>
+        <div class="macro-pill">🥩 {{ suggestion.proteinG }}g Protein</div>
+      </div>
+
+      <div class="ai-thought">
+        <span class="thought-label">💡 Why this meal?</span>
+        <p>{{ suggestion.aiReasoning }}</p>
+      </div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn btn-secondary" (click)="suggestion = null">Try again</button>
+      <button class="btn btn-primary" (click)="close()">Awesome, thanks!</button>
+    </div>
+  </div>
+</div>

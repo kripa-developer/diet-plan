@@ -1,0 +1,45 @@
+<div class="page fade-in">
+  <div class="spinner-wrap" *ngIf="loading"><div class="spinner"></div></div>
+
+  <ng-container *ngIf="!loading && plan">
+    <div class="detail-header">
+      <div>
+        <a routerLink="/plans" class="back-link">← Back to Plans</a>
+        <h1 class="page-title">{{ plan.name }}</h1>
+        <p class="page-sub" *ngIf="plan.description">{{ plan.description }}</p>
+        <span class="chip" *ngIf="plan.goal">🎯 {{ plan.goal }}</span>
+      </div>
+      <div class="total-cal card">
+        <div class="stat-value">{{ plan.totalCalories }}</div>
+        <div class="stat-label">Total Calories</div>
+      </div>
+    </div>
+
+    <!-- 7-day grid -->
+    <div class="week-grid">
+      <div class="day-col card" *ngFor="let day of days">
+        <div class="day-header">{{ formatDay(day) }}</div>
+        <div class="day-meals">
+          <ng-container *ngIf="getMealsForDay(day).length > 0; else emptyDay">
+            <div class="day-entry" *ngFor="let entry of getMealsForDay(day)">
+              <div class="entry-time chip">{{ formatTime(entry.mealTime) }}</div>
+              <div class="entry-name">{{ entry.meal.name }}</div>
+              <div class="entry-meta">
+                <span>{{ entry.meal.calories * entry.servings }} kcal</span>
+                <span>×{{ entry.servings }}</span>
+              </div>
+              <button class="remove-btn" (click)="remove(entry.id!)" title="Remove">✕</button>
+            </div>
+          </ng-container>
+          <ng-template #emptyDay>
+            <div class="empty-day">No meals added</div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-info" style="margin-top:24px">
+      💡 Go to <a routerLink="/meals"><strong>Meal Library</strong></a> to add more meals to this plan.
+    </div>
+  </ng-container>
+</div>

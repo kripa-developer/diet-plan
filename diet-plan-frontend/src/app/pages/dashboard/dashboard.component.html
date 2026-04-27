@@ -1,0 +1,111 @@
+<div class="page fade-in">
+  <div class="page-title">Dashboard</div>
+  <div class="page-sub">Welcome back! Here's your health overview.</div>
+
+  <div class="spinner-wrap" *ngIf="loading"><div class="spinner"></div></div>
+
+  <ng-container *ngIf="!loading && user">
+    <!-- Top stats -->
+    <div class="grid-4 stats-row">
+      <div class="stat-card">
+        <div class="stat-icon">⚖️</div>
+        <div class="stat-value">{{ user.bmi ?? '—' }}</div>
+        <div class="stat-label">BMI
+          <span class="bmi-badge" [style.background]="bmiStatus.color + '22'"
+                [style.color]="bmiStatus.color">{{ bmiStatus.label }}</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-value">{{ user.dailyCalorieTarget ?? '—' }}</div>
+        <div class="stat-label">Daily Calorie Target</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-value">{{ plans.length }}</div>
+        <div class="stat-label">Diet Plans</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🍽️</div>
+        <div class="stat-value">{{ latestPlan?.meals?.length ?? 0 }}</div>
+        <div class="stat-label">Meals in Latest Plan</div>
+      </div>
+    </div>
+
+    <!-- AI Promo Card -->
+    <div class="ai-promo card fade-in-up">
+      <div class="ai-promo-content">
+        <div class="ai-promo-text">
+          <h3>✨ Stuck on what to eat?</h3>
+          <p>Ask our AI to suggest a meal perfectly tailored to your BMI and calorie goals.</p>
+        </div>
+        <button class="btn btn-primary" (click)="openAiGenerator()">Generate AI Meal</button>
+      </div>
+      <div class="ai-promo-bg">✨</div>
+    </div>
+
+    <!-- Calorie progress & macros -->
+    <div class="grid-2 mid-row" *ngIf="latestPlan">
+      <!-- Calorie progress card... -->
+      <div class="card dash-card">
+        <h3>📊 Calorie Progress — <em>{{ latestPlan.name }}</em></h3>
+        <p class="sub-text">Based on all meals in your latest plan vs. daily target</p>
+        <div class="calorie-row">
+          <span class="big-num">{{ latestPlan.totalCalories }}</span>
+          <span class="divider">/</span>
+          <span class="target-num">{{ user.dailyCalorieTarget ?? '?' }} kcal</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" [style.width.%]="calorieProgress"></div>
+        </div>
+        <p class="progress-pct">{{ calorieProgress }}% of target</p>
+      </div>
+
+      <!-- Macros breakdown card... -->
+      <div class="card dash-card">
+        <h3>💪 Macros Breakdown</h3>
+        <p class="sub-text">Total across all meals in latest plan</p>
+        <div class="macro-row">
+          <span class="macro-name">Protein</span>
+          <div class="progress-bar-wrap" style="flex:1"><div class="progress-bar-fill" style="background:linear-gradient(90deg,#6366f1,#8b5cf6)" [style.width.%]="Math.min(100, proteinTotal/3)"></div></div>
+          <span class="macro-val">{{ proteinTotal }}g</span>
+        </div>
+        <div class="macro-row">
+          <span class="macro-name">Carbs</span>
+          <div class="progress-bar-wrap" style="flex:1"><div class="progress-bar-fill" style="background:linear-gradient(90deg,#f59e0b,#fbbf24)" [style.width.%]="Math.min(100, carbsTotal/5)"></div></div>
+          <span class="macro-val">{{ carbsTotal }}g</span>
+        </div>
+        <div class="macro-row">
+          <span class="macro-name">Fat</span>
+          <div class="progress-bar-wrap" style="flex:1"><div class="progress-bar-fill" style="background:linear-gradient(90deg,#ef4444,#f97316)" [style.width.%]="Math.min(100, fatTotal/2)"></div></div>
+          <span class="macro-val">{{ fatTotal }}g</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty plan state... -->
+    <div class="card dash-card" *ngIf="!latestPlan">
+      <div class="empty-state">
+        <div class="icon">📋</div>
+        <h3>No diet plans yet</h3>
+        <p>Create your first plan and start adding meals to track your nutrition.</p>
+        <a routerLink="/plans" class="btn btn-primary" style="margin-top:16px">Create a Plan</a>
+      </div>
+    </div>
+
+    <!-- Quick actions... -->
+    <div class="quick-actions">
+      <h3>Quick Actions</h3>
+      <div class="qa-grid">
+        <a routerLink="/meals"   class="qa-card card">🥗<span>Browse Meals</span></a>
+        <a routerLink="/plans"   class="qa-card card">📋<span>My Plans</span></a>
+        <a routerLink="/profile" class="qa-card card">👤<span>Edit Profile</span></a>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Profile incomplete nudge -->
+  <div class="alert alert-info fade-in" *ngIf="!loading && user && !user.dailyCalorieTarget">
+    ℹ️ Complete your <a routerLink="/profile"><strong>profile</strong></a> (age, weight, height) to unlock your personalised calorie target and BMI.
+  </div>
+</div>
