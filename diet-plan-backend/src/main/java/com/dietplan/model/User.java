@@ -16,6 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class User implements UserDetails {
 
     @Id
@@ -45,6 +47,43 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private ActivityLevel activityLevel;
+
+    /**
+     * BMI = weight(kg) / (height(m))^2
+     */
+    @Transient
+    public Double getBmi() {
+        if (weightKg == null || heightCm == null) return null;
+        double heightM = heightCm / 100.0;
+        return Math.round((weightKg / (heightM * heightM)) * 10.0) / 10.0;
+    }
+
+    /**
+     * Harris-Benedict equation + activity multiplier
+     */
+    @Transient
+    public Integer getDailyCalorieTarget() {
+        if (weightKg == null || heightCm == null || age == null || gender == null) return null;
+
+        double bmr;
+        if (gender == Gender.MALE) {
+            bmr = 88.362 + (13.397 * weightKg) + (4.799 * heightCm) - (5.677 * age);
+        } else {
+            bmr = 447.593 + (9.247 * weightKg) + (3.098 * heightCm) - (4.330 * age);
+        }
+
+        double multiplier = 1.2; // default SEDENTARY
+        if (activityLevel != null) {
+            multiplier = switch (activityLevel) {
+                case SEDENTARY       -> 1.2;
+                case LIGHTLY_ACTIVE  -> 1.375;
+                case MODERATELY_ACTIVE -> 1.55;
+                case VERY_ACTIVE     -> 1.725;
+                case EXTRA_ACTIVE    -> 1.9;
+            };
+        }
+        return (int) Math.round(bmr * multiplier);
+    }
 
     // UserDetails overrides
     @Override
